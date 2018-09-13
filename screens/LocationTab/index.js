@@ -6,7 +6,8 @@ export default class LocationTab extends Component {
     static navigationOptions = {
         tabBarIcon:<MaterialIcons name="location-on" style={{color:'#fff'}}  size={24} />,    
 
-        title:'Localização'
+        title:'Lojas'
+        
         
     }
   render() {
