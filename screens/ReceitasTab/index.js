@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import { StyleSheet, View,Dimensions,ActivityIndicator,Image } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { Container,  Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+import TopHeader from '../../components/TopHeader';
+import ItemReceita from './ItemReceita'
+const parseString = require('react-native-xml2js').parseString;
+const dados_receitas = [];
 
 export default class ReceitasTab extends Component {
   static navigationOptions = {
@@ -8,11 +13,50 @@ export default class ReceitasTab extends Component {
     tabBarIcon:<MaterialIcons name="restaurant" style={{color:'#fff'}}  size={24} />,
 
   }
+  state = {
+    dados_receitas : [],
+    loading:true
+  }
+  openWebSite = (url_address) =>{
+      console.log(url_address);
+  }
+  async getReceitas(){
+    await fetch('http://www.grupochama.com.br/app/receitas.php?d='+Date.now())
+        .then((response) => response.text())
+        .then((responseText) => {
+            parseString(responseText, function (err, result) {
+                result.rss.channel[0].item.forEach((res)=>{                  
+                  dados_receitas.push({res,key:"_"+Math.random().toString(36).substr(2, 9)});
+                })
+            });
+            this.setState({
+              dados_receitas:dados_receitas
+            })
+            
+        })
+        .catch((err) => {
+            console.log('Error fetching the feed: ', err)
+    })
+
+  }
+  
+  componentDidMount(){
+    this.getReceitas();
+  }
+
   render() {
+    console.log("State====",this.state.dados_receitas);
+    
     return (
-      <View>
-        <Text> textInComponent </Text>
-      </View>
+      <Container  style={{ backgroundColor:"#16B76C"}}>
+      <TopHeader title = {"Home"}/>
+        <Content>
+          {this.state.dados_receitas.map((row,index)=>            
+            <ItemReceita receita = {row} key={row.key} openSite = { () => this.openWebSite}/>            
+
+          )}
+        </Content>            
+      </Container>
     )
   }
 }

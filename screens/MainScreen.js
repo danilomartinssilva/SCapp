@@ -21,14 +21,12 @@ export default class MainScreen extends Component {
     list_of_products:list_products
   } 
   setProduct=(product)=>{
-    
-   
+       
   }
     
   render() {
     return (
-      <Container>      
-      
+      <Container style={{backgroundColor:"#16B76C"}}>            
       <AppTabNavigation screenProps = {{...this.state, setProduct:this.setProduct}}/>
       </Container>
     )
@@ -45,8 +43,10 @@ const AppTabNavigation = createBottomTabNavigator({
   /* OrderTab:OrderTab, */
   ListasTab:ListasTab,
   LocationTab:LocationTab,
+  
 
 },{
+  initialRouteName:'ReceitasTab',
   tabBarOptions:{
     showLabel:true,
     showIcon:true,  
